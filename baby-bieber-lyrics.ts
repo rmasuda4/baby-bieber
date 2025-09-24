@@ -61,5 +61,4 @@ const bieberBaby = [
   "Now, I'm all gone (gone, gone, gone)",
   "I'm gone",
 ];
-
 export default bieberBaby;
