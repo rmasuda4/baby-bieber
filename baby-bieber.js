@@ -1,81 +1,44 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
 /*
- * Problem: Searching for whole word "baby" in strings
- *
- * The challenge is to find complete word matches, not substring matches.
- * For example, "baby" should match in "baby!", "Baby", or "my baby is"
- * but should NOT match in "babysit", "Babylon", or "baby-sitter" where
- * "baby" appears as part of a larger word. We need to ensure word boundaries
- * are respected by checking that "baby" is surrounded by non-letter characters
- * or appears at the beginning/end of the string.
- */
-const baby_bieber_lyrics_1 = __importDefault(require("./baby-bieber-lyrics"));
+  NOTE: Problem with searching for the word "yeah":
+  When searching for whole words in text with punctuation, a naïve substring
+  search would incorrectly match partial words like "yeahman" or miss words
+  like "yeah!" or "yeah?". To solve this, we must:
+  1. Split text into individual words (by spaces)
+  2. Remove punctuation from each word before comparison
+  3. Match only the exact word "yeah" (case-insensitive)
+
+  This ensures we count "Yeah," "yeah!" and "yeah?" as matches, but exclude
+  "yeahman", "Yeahyeah", and other words containing "yeah" as a substring.
+*/
 /**
- * Checks if any string in the array contains the whole word "baby" (case-insensitive)
- * Uses word boundary regex to ensure we match complete words only
- * @param lines - Array of strings to search through
- * @returns true if any string contains "baby" as a whole word, false otherwise
+ * Returns true if any of the strings in lyrics contains "yeah" as a whole word (case-insensitive).
  */
-function hasBaby(lines) {
-    // Use word boundary regex to match "baby" as a complete word only
-    const wordPattern = /\bbaby\b/i;
-    return lines.some(line => wordPattern.test(line));
+function hasYeah(lyrics) {
+    return numYeahs(lyrics) > 0;
 }
 /**
- * Counts the total number of "baby" word occurrences across all strings in the array
- * Uses word boundary regex and global flag to find all instances
- * @param lines - Array of strings to search through
- * @returns number of "baby" word occurrences found
+ * Returns the total count of occurrences of "yeah" as a whole word across all lines (case-insensitive).
  */
-function numBaby(lines) {
-    // Use word boundary regex with global flag to find all occurrences
-    const wordPattern = /\bbaby\b/gi;
-    return lines
-        .map(line => {
-        const matches = line.match(wordPattern);
-        return matches ? matches.length : 0;
+function numYeahs(lyrics) {
+    return lyrics
+        .map((line) => {
+        // Split by spaces and count 'yeah' occurrences
+        const words = line.toLowerCase().split(' ');
+        return words.filter((w) => {
+            // Remove punctuation from the word to match 'yeah'
+            const cleanWord = w.replace(/[^a-z]/g, '');
+            return cleanWord === 'yeah';
+        }).length;
     })
-        .reduce((total, count) => total + count, 0);
+        .reduce((acc, n) => acc + n, 0);
 }
-// Test cases for hasBaby function
-console.log('=== hasBaby Tests ===');
-console.log(hasBaby(baby_bieber_lyrics_1.default)); // Expected: true (contains "baby" multiple times)
-console.log(hasBaby(baby_bieber_lyrics_1.default.slice(0, 4))); // Expected: false (first 4 lines don't contain "baby")
-// Additional test cases for hasBaby
-const testCases = [
-    'I love my baby!', // Should be true - whole word with punctuation
-    'Baby is sleeping', // Should be true - whole word at start
-    'The babysitter came', // Should be false - "baby" is part of "babysitter"
-    'Babylon was great', // Should be false - "baby" is part of "Babylon"
-    'BABY loves music', // Should be true - case insensitive
-];
-console.log('hasBaby additional tests:');
-console.log(hasBaby(testCases.slice(0, 1))); // true
-console.log(hasBaby(testCases.slice(1, 2))); // true
-console.log(hasBaby(testCases.slice(2, 3))); // false
-console.log(hasBaby(testCases.slice(3, 4))); // false
-console.log(hasBaby(testCases.slice(4, 5))); // true
-// Test cases for numBaby function
-console.log('\n=== numBaby Tests ===');
-console.log(numBaby(baby_bieber_lyrics_1.default)); // Expected: 56 (total occurrences in full lyrics)
-console.log(numBaby(baby_bieber_lyrics_1.default.slice(10, 15))); // Count in lines 10-14
-// Additional test cases for numBaby
-const countTestCases = [
-    'Baby baby baby oh', // Should count 3
-    'The babysitter has a baby', // Should count 1 (not "babysitter")
-    'Baby! Baby? Baby.', // Should count 3
-    'No matches here', // Should count 0
-    'Babylon baby Baby', // Should count 2 (not "Babylon")
-];
-console.log('numBaby additional tests:');
-console.log(numBaby(countTestCases.slice(0, 1))); // 3
-console.log(numBaby(countTestCases.slice(1, 2))); // 1
-console.log(numBaby(countTestCases.slice(2, 3))); // 3
-console.log(numBaby(countTestCases.slice(3, 4))); // 0
-console.log(numBaby(countTestCases.slice(4, 5))); // 2
-// Test with empty array
-console.log(numBaby([])); // 0
+// Some test invocations:
+console.log('hasYeah(bieberBaby) =>', hasYeah(bieberBaby)); // should print true
+console.log('hasYeah(bieberBaby.slice(0, 4)) =>', hasYeah(bieberBaby.slice(0, 4))); // might be false
+console.log('numYeahs(bieberBaby) =>', numYeahs(bieberBaby)); // expected count based on lyrics
+console.log('numYeahs(bieberBaby.slice(2,4)) =>', numYeahs(bieberBaby.slice(2, 4)));
+// Additional tests to verify no false positives for substring cases
+console.log('hasYeah(["Yeahman is cool"]) =>', hasYeah(['Yeahman is cool'])); // false
+console.log('numYeahs(["Yeahman said yeah"] ) =>', numYeahs(['Yeahman said yeah'])); // 1
+console.log('numYeahs(["Yeah, yeah! yeah?"]) =>', numYeahs(['Yeah, yeah! yeah?'])); // should be 3

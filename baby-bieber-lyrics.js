@@ -1,5 +1,4 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
 const bieberBaby = [
     'Oh-ooh-whoa-oh-oh-oh-oh',
     'Oh-ooh-whoa-oh-oh-oh-oh',
@@ -26,7 +25,7 @@ const bieberBaby = [
     "I'll buy you anything (yo), I'll buy you any ring (uh-huh)",
     "And I'm in pieces (yo), baby, fix me (uh-huh)",
     "And just shake me 'til you wake me from this bad dream (yo, uh-huh)",
-    'I\'m goin\' down (oh), down, down, down (uh-huh)',
+    "I'm goin' down (oh), down, down, down (uh-huh)",
     "And I just can't believe, my first love won't be around, and I'm like",
     'Baby, baby, baby, oh',
     'Like, "Baby, baby, baby, no"',
@@ -63,4 +62,4 @@ const bieberBaby = [
     "Now, I'm all gone (gone, gone, gone)",
     "I'm gone",
 ];
-exports.default = bieberBaby;
+console.log('bieberBaby defined length =', bieberBaby.length); // avoids unused variable lint error
