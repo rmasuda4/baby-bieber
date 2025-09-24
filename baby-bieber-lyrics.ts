@@ -1,4 +1,4 @@
-export const bieberBaby = [
+const bieberBaby = [
   'Oh-ooh-whoa-oh-oh-oh-oh',
   'Oh-ooh-whoa-oh-oh-oh-oh',
   'Oh-ooh-whoa-oh, oh-oh-oh-oh',
@@ -61,3 +61,5 @@ export const bieberBaby = [
   "Now, I'm all gone (gone, gone, gone)",
   "I'm gone",
 ];
+
+export default bieberBaby;
